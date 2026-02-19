@@ -13,6 +13,8 @@ else ifeq ($(HASH),avx-vaes)
   HASHNUM := 1
 else ifeq ($(HASH),legacy-generic)
   HASHNUM := 2
+else ifeq ($(HASH),stdlib)
+  HASHNUM := 3
 else
   HASHNUM := 0
 endif
@@ -24,11 +26,12 @@ else ifeq ($(VERBOSE),true)
   CXXFLAGS += -DVERBOSE
 endif
 
-%: src/%.cpp
+%: src/%.cpp src/hashes/*.hpp
 	$(CXX) "src/$@.cpp" -o "$@" $(CXXFLAGS)
 
-.PHONY: clean all
-all:
-	$(MAKE) benchHash hasher
+.PHONY: clean all bench hash
+all: bench hash
+bench: benchHash
+hash: hasher
 clean:
 	@rm -fv benchHash hasher

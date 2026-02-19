@@ -23,6 +23,12 @@
   #endif
 
   #include "legacyGeneric.hpp"
+#elif SELECTHASH == 3
+  #ifdef VERBOSE
+    #pragma message("Selected standard library hash")
+  #endif
+
+  #include "stdlib.hpp"
 #else
   #error "Unknown hash algorithm specified"
 #endif
