@@ -21,23 +21,23 @@
 */
 
 static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
-  __m512i last = _mm512_setzero_epi32();
+  __m512i hash = _mm512_setzero_epi32();
   for (unsigned int i = 0; i < inputCount; i++) {
     const uint8_t* input = (uint8_t*)inputs[i].data();
-    unsigned int stringSize = inputs[i].length();
+    unsigned int inputSize = inputs[i].length();
 
-    while (stringSize >= 64) {
+    while (inputSize >= 64) {
       const __m512i a = _mm512_loadu_epi8(input);
-      last = _mm512_aesenc_epi128(last, a);
+      hash = _mm512_aesenc_epi128(hash, a);
 
-      stringSize -= 64;
+      inputSize -= 64;
       input += 64;
     }
 
-    if (stringSize > 0) {
-      const __mmask64 mask = _bzhi_u64(0xFFFFFFFFFFFFFFFF, stringSize);
+    if (inputSize > 0) {
+      const __mmask64 mask = _bzhi_u64(0xFFFFFFFFFFFFFFFF, inputSize);
       const __m512i a = _mm512_maskz_loadu_epi8(mask, input);
-      last = _mm512_aesenc_epi128(last, a);
+      hash = _mm512_aesenc_epi128(hash, a);
     }
   }
 
@@ -45,12 +45,12 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
    - Rotate and sum until every element contains the sum of all elements
    - Effectively, a horizontal add
   */
-  __m512i rotateOne = _mm512_alignr_epi64(last, last, 1);
-  __m512i sumRotateOne = _mm512_add_epi64(last, rotateOne);
-  __m512i rotateTwo = _mm512_alignr_epi64(sumRotateOne, sumRotateOne, 2);
-  __m512i sumRotateTwo = _mm512_add_epi64(rotateTwo, sumRotateOne);
-  __m512i rotateFour = _mm512_alignr_epi64(sumRotateTwo, sumRotateTwo, 4);
-  __m512i sumRotateFour = _mm512_add_epi64(rotateFour, sumRotateTwo);
+  const __m512i rotateOne = _mm512_alignr_epi64(hash, hash, 1);
+  const __m512i sumRotateOne = _mm512_add_epi64(hash, rotateOne);
+  const __m512i rotateTwo = _mm512_alignr_epi64(sumRotateOne, sumRotateOne, 2);
+  const __m512i sumRotateTwo = _mm512_add_epi64(rotateTwo, sumRotateOne);
+  const __m512i rotateFour = _mm512_alignr_epi64(sumRotateTwo, sumRotateTwo, 4);
+  const __m512i sumRotateFour = _mm512_add_epi64(rotateFour, sumRotateTwo);
 
   //Spread the result out over 128 bits, adjust the range to ['A', 'P']
   std::string output(16, 0);
