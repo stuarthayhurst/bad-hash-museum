@@ -29,6 +29,6 @@ endif
 
 .PHONY: clean all
 all:
-	$(MAKE) benchHash
+	$(MAKE) benchHash hasher
 clean:
-	@rm -fv benchHash
+	@rm -fv benchHash hasher
