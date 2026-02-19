@@ -23,8 +23,15 @@
 */
 
 static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
-  const __m128i shuffleVec = _mm_setr_epi8(0, 15, 2, 13, 4, 11, 6, 9,
-                                           8, 7, 10, 5, 12, 3, 14, 1);
+  /*
+   - Alternate low indices between the start and end, skipping an element
+     - Shift right by 1 to avoid index 0 mapping to itself
+   - Used to mix data around, to help out with data concentrated at the start
+  */
+  const __m128i shuffleVec = _mm_setr_epi8(1, 0, 15, 2, 13, 4, 11, 6,
+                                           9, 8, 7, 10, 5, 12, 3, 14);
+
+  //Initialise the hash to a mix of masks, to help expand small amounts of data
   __m128i hash = _mm_setr_epi16(0xF - 1, 0xFF - 1, 0xFFA - 1, 0xFFF - 1,
                                 0xF - 1, 0xFF - 1, 0xFFA - 1, 0xFFF - 1);
 
