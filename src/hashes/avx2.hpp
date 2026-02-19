@@ -67,10 +67,10 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
 
     if (inputSize > 0) {
       //Load the bulk of the remainder
-      __m128i inputMask = _mm_setr_epi32((inputSize >= 4) ? -1 : 0,
-                                         (inputSize >= 8) ? -1 : 0,
-                                         (inputSize >= 12) ? -1 : 0,
-                                         0);
+      const __m128i inputMask = _mm_setr_epi32((inputSize >= 4) ? -1 : 0,
+                                               (inputSize >= 8) ? -1 : 0,
+                                               (inputSize >= 12) ? -1 : 0,
+                                               0);
       __m128i data = _mm_maskload_epi32((const int32_t*)input, inputMask);
 
       //Load the final remainder
