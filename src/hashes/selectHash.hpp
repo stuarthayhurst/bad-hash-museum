@@ -35,6 +35,12 @@
   #endif
 
   #include "avx2.hpp"
+#elif SELECTHASH == 5
+  #ifdef VERBOSE
+    #pragma message("Selected simple generic hash")
+  #endif
+
+  #include "simpleGeneric.hpp"
 #else
   #error "Unknown hash algorithm specified"
 #endif
