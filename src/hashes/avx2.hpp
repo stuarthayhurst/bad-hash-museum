@@ -54,6 +54,9 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
         //Multiply the current hash and the rotated data, then sum the intermediates
         __m128i influencedData = _mm_madd_epi16(hash, rotatedData);
 
+        //Avoid loops of zero
+        influencedData = _mm_add_epi16(influencedData, _mm_set1_epi16(1));
+
         //XOR with the current hash
         hash = _mm_xor_si128(influencedData, hash);
       }
@@ -120,6 +123,9 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
 
         //Multiply the current hash and the rotated data, then sum the intermediates
         __m128i influencedData = _mm_madd_epi16(hash, rotatedData);
+
+        //Avoid loops of zero
+        influencedData = _mm_add_epi16(influencedData, _mm_set1_epi16(1));
 
         //XOR with the current hash
         hash = _mm_xor_si128(influencedData, hash);
