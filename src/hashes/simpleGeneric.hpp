@@ -1,5 +1,5 @@
-#ifndef LEGACYGENERICHASH
-#define LEGACYGENERICHASH
+#ifndef SIMPLEGENERICHASH
+#define SIMPLEGENERICHASH
 
 #include <bit>
 #include <cstdint>
