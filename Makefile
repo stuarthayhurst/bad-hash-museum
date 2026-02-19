@@ -15,6 +15,8 @@ else ifeq ($(HASH),legacy-generic)
   HASHNUM := 2
 else ifeq ($(HASH),stdlib)
   HASHNUM := 3
+else ifeq ($(HASH),avx2)
+  HASHNUM := 4
 else
   HASHNUM := 0
 endif

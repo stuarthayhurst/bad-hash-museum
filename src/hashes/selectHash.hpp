@@ -29,6 +29,12 @@
   #endif
 
   #include "stdlib.hpp"
+#elif SELECTHASH == 4
+  #ifdef VERBOSE
+    #pragma message("Selected AVX2 hash")
+  #endif
+
+  #include "avx2.hpp"
 #else
   #error "Unknown hash algorithm specified"
 #endif
