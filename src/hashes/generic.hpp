@@ -14,8 +14,10 @@
 */
 
 static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
-  constexpr unsigned int outputBitWidth = 64;
-  uintmax_t output[outputBitWidth / (sizeof(uintmax_t) * 8)] = {0};
+  constexpr unsigned int resultBitWidth = 64;
+  constexpr unsigned int resultByteWidth = resultBitWidth / 8;
+  uintmax_t result[resultByteWidth / sizeof(uintmax_t)] = {0};
+  constexpr unsigned int resultElements = sizeof(result) / sizeof(uintmax_t);
 
   unsigned char accum = 0;
   unsigned char index = 0;
@@ -23,7 +25,7 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
   for (unsigned int i = 0; i < inputCount; i++) {
     for (const char& character : inputs[i]) {
       const unsigned int rotateBits = accum % (sizeof(uintmax_t) * 8);
-      output[index % (sizeof(output) / sizeof(uintmax_t))] ^= std::rotr((uintmax_t)character, rotateBits) ^ accum;
+      result[index % resultElements] ^= std::rotr((uintmax_t)character, rotateBits) ^ accum;
 
       index++;
       accum += character;
@@ -31,9 +33,13 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
   }
 
   //Split upper and lower half of each byte, add to 'A' and store
-  std::string outputString(sizeof(output), 0);
-  for (std::size_t i = 0; i < sizeof(output); i++) {
-    outputString[i] = (char)('A' + (char)((output[i / (sizeof(output) / 2)] >> (i * 4)) & 0xF));
+  constexpr unsigned int outputSize = sizeof(result) * 2;
+  std::string outputString(outputSize, 0);
+  for (std::size_t i = 0; i < outputSize; i++) {
+    //Map from output bytes to elements, filling half a byte each time
+    const uintmax_t resultElement = result[(i / sizeof(uintmax_t)) / 2];
+
+    outputString[i] = (char)('A' + (char)((resultElement >> (i * 4)) & 0xF));
   }
 
   return outputString;
