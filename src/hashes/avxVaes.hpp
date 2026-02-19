@@ -72,4 +72,5 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
 
   return output;
 }
+
 #endif
