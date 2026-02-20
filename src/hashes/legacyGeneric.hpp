@@ -24,8 +24,8 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
    - Repeat this process for every character of every path
   */
   for (unsigned int i = 0; i < inputCount; i++) {
-    for (const char& pathCharacter : inputs[i]) {
-      output[0] ^= pathCharacter;
+    for (const char& character : inputs[i]) {
+      output[0] ^= character;
       for (unsigned char& outputByte : output) {
         outputByte ^= prev;
         prev = outputByte;
