@@ -1,6 +1,7 @@
 #ifndef SIMPLEGENERICHASH
 #define SIMPLEGENERICHASH
 
+#include <algorithm>
 #include <bit>
 #include <cstdint>
 #include <cstddef>
@@ -15,8 +16,8 @@
 static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
   constexpr unsigned int resultBitWidth = 64;
   constexpr unsigned int resultByteWidth = resultBitWidth / 8;
-  uintmax_t result[resultByteWidth / sizeof(uintmax_t)] = {0};
-  constexpr unsigned int resultElements = sizeof(result) / sizeof(uintmax_t);
+  constexpr unsigned int resultElements = std::max(resultByteWidth / sizeof(uintmax_t), (uintmax_t)1);
+  uintmax_t result[resultElements] = {0};
 
   unsigned int index = 0;
   for (unsigned int i = 0; i < inputCount; i++) {
