@@ -1,15 +1,10 @@
 #include <chrono>
-#include <cstdlib>
-#include <ctime>
 #include <exception>
 #include <iostream>
 #include <string>
 
 #include "hashes/selectHash.hpp"
-
-static unsigned int getRandom(unsigned int lower, unsigned int upper) {
-  return lower + (std::rand() % ((upper - lower) + 1));
-}
+#include "randomString.hpp"
 
 int main(int argc, char* argv[]) {
   unsigned int inputCount = 100;
@@ -48,26 +43,11 @@ int main(int argc, char* argv[]) {
   std::string* inputs = new std::string[inputCount];
 
   //Generate random strings
-  std::srand((unsigned)std::time(nullptr));
+  seedRandom();
   for (unsigned int i = 0; i < inputCount; i++) {
     //Create a string with a random length, up to maxStringLength
     const unsigned int stringLength = getRandom(1, maxStringLength);
-    inputs[i] = std::string(stringLength, 0);
-
-    //Fill the string
-    for (unsigned int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
-      switch (getRandom(0, 2)) {
-      case 0:
-        inputs[i][stringIndex] = getRandom('a', 'z');
-        break;
-      case 1:
-        inputs[i][stringIndex] = getRandom('A', 'Z');
-        break;
-      case 2:
-        inputs[i][stringIndex] = getRandom('0', '9');
-        break;
-      }
-    }
+    inputs[i] = generateRandomString(stringLength);
   }
 
   //Stop compilers removing the loop
