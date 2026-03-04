@@ -30,12 +30,13 @@ else ifeq ($(VERBOSE),true)
   CXXFLAGS += -DVERBOSE
 endif
 
-%: src/%.cpp src/hashes/*.hpp
+%: src/%.cpp src/*.hpp src/hashes/*.hpp
 	$(CXX) "src/$@.cpp" -o "$@" $(CXXFLAGS)
 
-.PHONY: clean all bench hash
-all: bench hash
+.PHONY: clean all bench hash analyse
+all: bench hash analyser
 bench: benchHash
 hash: hasher
+analyse: analyser
 clean:
-	@rm -fv benchHash hasher
+	@rm -fv benchHash hasher analyser

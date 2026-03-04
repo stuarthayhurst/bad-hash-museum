@@ -32,6 +32,11 @@
     - Compile with `make hasher`
     - Run `./hasher [string]`
       - A string to hash must be supplied
+  - Analyser
+    - Check the distribution of hash outputs
+    - Compile with `make analyse`
+    - Run `./analyser [string count]`
+      - String count is optional and defaults to `10000000`
 
 ## Build configuration
   - The Makefile supports several environment variables to configure the build
