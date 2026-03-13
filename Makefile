@@ -1,4 +1,4 @@
-CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++23 -O3
+CXXFLAGS += -Wall -Wextra -Werror -Wpedantic -std=c++23 -O3 -fno-math-errno
 
 ifndef ARCH
   CXXFLAGS += -march=native
