@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <unordered_map>
@@ -74,7 +75,7 @@ namespace {
   void generateDistributionLinear(uintmax_t stringCount) {
     std::string currentString = "a";
     for (uintmax_t i = 0; i < stringCount; i++) {
-      //Calculate the hash and increment to total for that element
+      //Calculate the hash and increment the total for that element
       const std::string hashOutput = hashStrings(&currentString, 1);
       if (hashValues.contains(hashOutput)) {
         hashValues[hashOutput]++;
@@ -100,17 +101,65 @@ namespace {
   }
 }
 
+namespace {
+  unsigned int compareHashes(const std::string& a, const std::string& b) {
+    unsigned int totalDifference = 0;
+    for (unsigned int i = 0; i < a.length(); i++) {
+      //Find the smallest absolute difference between the characters (A -> P)
+      unsigned int difference = std::abs(a[i] - b[i]);
+      if (difference > 8) {
+        difference = 16 - difference;
+      }
+
+      totalDifference += difference;
+    }
+
+    return totalDifference;
+  }
+
+  void analyseSequence(uintmax_t stringCount) {
+    //Check each pair of hashes for sequential strings
+    std::string currentString = "a";
+    std::string lastHash = hashStrings(&currentString, 1);
+    uintmax_t totalHashDifference = 0;
+    for (uintmax_t i = 0; i < stringCount; i++) {
+      //Generate the next string and its hash
+      currentString = nextString(currentString);
+      const std::string currentHash = hashStrings(&currentString, 1);
+
+      //Compare the hashes and record the current as the previous
+      totalHashDifference += compareHashes(lastHash, currentHash);
+      lastHash = currentHash;
+    }
+
+    //Print the average difference
+    std::cout << "Average sequential hash difference: " \
+              << (double)totalHashDifference / stringCount << std::endl;
+  }
+}
+
 int main(int argc, char* argv[]) {
   //Set up tool
   seedRandom();
 
-  //Decide how many strings to try
+  //Decide how many strings to try in the distribution
   uintmax_t distributionStringCount = 10000000;
   if (argc >= 2) {
     try {
       distributionStringCount = std::stoull(argv[1], nullptr, 10);
     } catch (const std::exception&) {
-      std::cerr << "Failed to process string count" << std::endl;
+      std::cerr << "Failed to process distribution string count" << std::endl;
+      return 1;
+    }
+  }
+
+  //Decide how many strings to try in a sequence
+  uintmax_t sequenceStringCount = 10000000;
+  if (argc >= 3) {
+    try {
+      sequenceStringCount = std::stoull(argv[2], nullptr, 10);
+    } catch (const std::exception&) {
+      std::cerr << "Failed to process sequence string count" << std::endl;
       return 1;
     }
   }
@@ -127,6 +176,10 @@ int main(int argc, char* argv[]) {
   generateDistributionLinear(distributionStringCount);
   analyseDistribution(distributionStringCount);
   resetDistribution();
+  std::cout << "\n";
+
+  //Analyse the difference between each string in a sequence
+  analyseSequence(sequenceStringCount);
 
   return 0;
 }
