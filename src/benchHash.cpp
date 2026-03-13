@@ -4,7 +4,7 @@
 #include <string>
 
 #include "hashes/selectHash.hpp"
-#include "randomString.hpp"
+#include "strings/randomString.hpp"
 
 int main(int argc, char* argv[]) {
   unsigned int inputCount = 100;

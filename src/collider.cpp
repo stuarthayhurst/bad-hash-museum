@@ -3,7 +3,7 @@
 #include <string>
 
 #include "hashes/selectHash.hpp"
-#include "sequentialString.hpp"
+#include "strings/sequentialString.hpp"
 
 namespace {
   std::string padLineClear(unsigned int lineLength, unsigned int messageLength) {

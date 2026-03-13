@@ -6,8 +6,8 @@
 #include <string>
 
 #include "hashes/selectHash.hpp"
-#include "randomString.hpp"
-#include "sequentialString.hpp"
+#include "strings/randomString.hpp"
+#include "strings/sequentialString.hpp"
 
 //Data
 namespace {
