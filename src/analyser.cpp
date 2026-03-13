@@ -117,14 +117,16 @@ namespace {
     return totalDifference;
   }
 
-  void analyseSequence(uintmax_t stringCount) {
+  void analyseSequence(uintmax_t stringCount, unsigned int stride) {
     //Check each pair of hashes for sequential strings
     std::string currentString = "a";
     std::string lastHash = hashStrings(&currentString, 1);
     uintmax_t totalHashDifference = 0;
     for (uintmax_t i = 0; i < stringCount; i++) {
       //Generate the next string and its hash
-      currentString = nextString(currentString);
+      for (unsigned int j = 0; j < stride; j++) {
+        currentString = nextString(currentString);
+      }
       const std::string currentHash = hashStrings(&currentString, 1);
 
       //Compare the hashes and record the current as the previous
@@ -133,7 +135,7 @@ namespace {
     }
 
     //Print the average difference
-    std::cout << "Average sequential hash difference: " \
+    std::cout << "Average sequential hash difference (stride " << stride << "): " \
               << (double)totalHashDifference / stringCount << std::endl;
   }
 }
@@ -179,7 +181,8 @@ int main(int argc, char* argv[]) {
   std::cout << "\n";
 
   //Analyse the difference between each string in a sequence
-  analyseSequence(sequenceStringCount);
+  analyseSequence(sequenceStringCount, 1);
+  analyseSequence(sequenceStringCount, 16);
 
   return 0;
 }
