@@ -135,9 +135,14 @@ namespace {
       lastHash = currentHash;
     }
 
+    const unsigned int outputCharacters = 16;
+    const unsigned int maxDifference = 8;
+    const unsigned int bestAverageDifference = outputCharacters * (maxDifference / 2);
+
     //Print the average difference
     std::cout << "Average sequential hash difference (stride " << stride << "): " \
-              << (double)totalHashDifference / stringCount << std::endl;
+              << (double)totalHashDifference / stringCount << " / " \
+              << bestAverageDifference << std::endl;
   }
 }
 
@@ -194,8 +199,8 @@ namespace {
       std::cout << "\n";
     }
 
-    std::cout << "Found " << totalPatterns \
-              << " constant-byte input(s) that produce(s) a pattern" << std::endl;
+    std::cout << totalPatterns << " / " << std::numeric_limits<char>::max() + 1 \
+              << " constant-byte inputs produce a pattern" << std::endl;
   }
 }
 
