@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <numeric>
 #include <unordered_map>
 #include <string>
 
@@ -140,6 +141,64 @@ namespace {
   }
 }
 
+namespace {
+  bool checkPattern(const std::string& hash, bool showMatches) {
+    /*
+     - Search for a pattern in the hash
+     - Use the first byte as the pattern, and grown until one is found or
+       the pattern size is half the hash
+     - Use an offset and grow it up to half the string size
+    */
+    for (unsigned int offset = 0; offset < hash.length() / 2; offset++) {
+      unsigned int remainingHashLength = hash.length() - offset;
+      for (unsigned int patternSize = 1; patternSize < remainingHashLength / 2; patternSize++) {
+        bool pattern = true;
+        for (unsigned int index = 0; index < remainingHashLength; index++) {
+          //Move on to the next pattern if any byte doesn't match
+          if (hash[index + offset] != hash[(index % patternSize) + offset]) {
+            pattern = false;
+            break;
+          }
+        }
+
+        if (pattern) {
+          if (showMatches) {
+            std::cout << "Y: " << hash << std::endl;
+          }
+
+          return true;
+        }
+      }
+    }
+
+    if (showMatches) {
+      std::cout << "N: " << hash << std::endl;
+    }
+    return false;
+  }
+
+  void analyseConstantPattern(bool showMatches) {
+    //Look for a pattern in every constant-byte string
+    unsigned int totalPatterns = 0;
+    const unsigned int stringLength = 8;
+    for (unsigned int value = 0; value < std::numeric_limits<char>::max() + 1; value++) {
+      const std::string inputString = std::string(stringLength, (char)value);
+
+      //Hash the string and check for a pattern
+      if (checkPattern(hashStrings(&inputString, 1), showMatches)) {
+        totalPatterns++;
+      }
+    }
+
+    if (showMatches) {
+      std::cout << "\n";
+    }
+
+    std::cout << "Found " << totalPatterns \
+              << " constant-byte input(s) that produce(s) a pattern" << std::endl;
+  }
+}
+
 int main(int argc, char* argv[]) {
   //Set up tool
   seedRandom();
@@ -166,6 +225,17 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  //Decide whether to show pattern matches
+  bool showMatches = false;
+  if (argc >= 4) {
+    try {
+      showMatches = (std::string(argv[3]) == "true");
+    } catch (const std::exception&) {
+      std::cerr << "Failed to process show matches toggle, expected 'true' or 'false'" << std::endl;
+      return 1;
+    }
+  }
+
   //Generate and analyse the hash distribution with random inputs
   std::cout << "Random hash inputs:" << std::endl;
   generateDistributionRandom(distributionStringCount);
@@ -183,6 +253,9 @@ int main(int argc, char* argv[]) {
   //Analyse the difference between each string in a sequence
   analyseSequence(sequenceStringCount, 1);
   analyseSequence(sequenceStringCount, 16);
+  std::cout << "\n";
+
+  analyseConstantPattern(showMatches);
 
   return 0;
 }

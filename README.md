@@ -33,11 +33,11 @@
     - Run `./hasher [string]`
       - A string to hash must be supplied
   - Analyser
-    - Check the distribution and differences of hash outputs
+    - Check the distribution and differences of hash outputs, as well as checking for patterns
     - Compile with `make analyse`
-    - Run `./analyser [distribution count] [sequence count]`
+    - Run `./analyser [distribution count] [sequence count] [show matches (true / false)]`
       - All arguments are optional, but previous arguments must be specified
-      - Defaults to `10000000` and `10000000`
+      - Defaults to `10000000`, `10000000` and `false`
 
 ## Build configuration
   - The Makefile supports several environment variables to configure the build
