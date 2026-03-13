@@ -38,6 +38,11 @@
     - Run `./analyser [distribution count] [sequence count] [show matches (true / false)]`
       - All arguments are optional, but previous arguments must be specified
       - Defaults to `10000000`, `10000000` and `false`
+  - Collision tester
+    - Attempt to find strings that have collisions with an input string
+    - Compiler with `make collide`
+    - Run `./collider [string]`
+      - A string to hash must be supplied
 
 ## Build configuration
   - The Makefile supports several environment variables to configure the build
