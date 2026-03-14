@@ -20,7 +20,7 @@
  - Requires AVX-512(F, BW, VL), VAES, AVX2, SSE2 and BMI2
 */
 
-static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
+static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsigned int inputCount) {
   __m512i hash = _mm512_setzero_epi32();
   for (unsigned int i = 0; i < inputCount; i++) {
     const uint8_t* input = (uint8_t*)inputs[i].data();

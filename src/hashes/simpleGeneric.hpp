@@ -13,7 +13,7 @@
  - Multiply the next character by 1024 - 1 to widen it, then sum with the rotation
 */
 
-static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
+static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsigned int inputCount) {
   constexpr unsigned int resultBitWidth = 64;
   constexpr unsigned int resultByteWidth = resultBitWidth / 8;
   constexpr unsigned int resultElements = std::max(resultByteWidth / sizeof(uintmax_t), (uintmax_t)1);

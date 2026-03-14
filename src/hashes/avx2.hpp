@@ -22,7 +22,7 @@
   - While AVX-512 would speed up loading the remainder, it'd defeat the point of not using VAES
 */
 
-static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
+static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsigned int inputCount) {
   /*
    - Alternate low indices between the start and end, skipping an element
      - Shift right by 1 to avoid index 0 mapping to itself

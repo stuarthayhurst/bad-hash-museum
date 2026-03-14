@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#define BENCHMARK
 #include "hashes/selectHash.hpp"
 #include "strings/randomString.hpp"
 

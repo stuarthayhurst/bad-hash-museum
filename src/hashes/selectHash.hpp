@@ -1,6 +1,13 @@
 #ifndef HASHSELECTOR
 #define HASHSELECTOR
 
+//Don't inline if we're trying to benchmark the hash
+#ifdef BENCHMARK
+  #define INLINEATTRIBUTE __attribute__ ((noinline))
+#else
+  #define INLINEATTRIBUTE
+#endif
+
 #ifndef SELECTHASH
   #error "No hash algorithm specified"
 #endif

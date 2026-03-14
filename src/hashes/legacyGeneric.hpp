@@ -12,7 +12,7 @@
    - Carry forward the previous result from each operation
 */
 
-static std::string hashStrings(const std::string* inputs, unsigned int inputCount) {
+static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsigned int inputCount) {
   constexpr unsigned int hashWidth = 8;
   uint8_t output[hashWidth] = {0};
   uint8_t prev = 0;
