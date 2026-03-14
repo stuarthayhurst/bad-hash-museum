@@ -26,9 +26,15 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
     const uint8_t* input = (uint8_t*)inputs[i].data();
     unsigned int inputSize = inputs[i].length();
 
+    //Chosen by a fair dice roll, guaranteed to be random
+    const __m512i key = _mm512_setr_epi64(0x343B2F2F2063686F, 0x73656E2062792061,
+      0x2066616972206469, 0x636520726F6C6C2E, 0x0A2F2F2067756172, 0x616E746565642074,
+      0x6F2062652072616E, 0x646F6D2E0BAD1DEA);
+
     while (inputSize >= 64) {
-      const __m512i a = _mm512_loadu_epi8(input);
-      hash = _mm512_aesenc_epi128(hash, a);
+      __m512i a = _mm512_loadu_epi8(input);
+      a = _mm512_aesenc_epi128(a, key);
+      hash = _mm512_xor_si512(_mm512_aesenc_epi128(a, key), hash);
 
       inputSize -= 64;
       input += 64;
@@ -36,8 +42,9 @@ static std::string hashStrings(const std::string* inputs, unsigned int inputCoun
 
     if (inputSize > 0) {
       const __mmask64 mask = _bzhi_u64(0xFFFFFFFFFFFFFFFF, inputSize);
-      const __m512i a = _mm512_maskz_loadu_epi8(mask, input);
-      hash = _mm512_aesenc_epi128(hash, a);
+      __m512i a = _mm512_maskz_loadu_epi8(mask, input);
+      a = _mm512_aesenc_epi128(a, key);
+      hash = _mm512_xor_si512(_mm512_aesenc_epi128(a, key), hash);
     }
   }
 
