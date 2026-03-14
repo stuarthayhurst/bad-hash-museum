@@ -86,9 +86,14 @@ int main(int argc, char* argv[]) {
 
       //Calculate the hash rate and format
       const double hashRate = (double)attempts / ((double)deltaTimeNano / 1000000000.0);
-      const std::string message = "String length " + std::to_string(searchString.size()) \
-                                  + ", " + std::to_string((uintmax_t)(hashRate)) \
-                                  + " hashes per second";
+      std::string message;
+      if (randomMode) {
+        message = std::to_string((uintmax_t)(hashRate)) + " hashes per second";
+      } else {
+        message = "String length " + std::to_string(searchString.size()) \
+                                   + ", " + std::to_string((uintmax_t)(hashRate)) \
+                                   + " hashes per second";
+      }
 
       //Clear the line and update it
       std::cout << message << padLineClear(lastRateMessage.size(), message.size()) \
