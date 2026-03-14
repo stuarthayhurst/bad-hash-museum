@@ -41,8 +41,8 @@
   - Collision tester
     - Attempt to find strings that have collisions with an input string
     - Compiler with `make collide`
-    - Run `./collider [string]`
-      - A string to hash must be supplied
+    - Run `./collider [string] [random mode (true / false)]`
+      - A string to hash must be supplied, random mode defaults to false
 
 ## Build configuration
   - The Makefile supports several environment variables to configure the build

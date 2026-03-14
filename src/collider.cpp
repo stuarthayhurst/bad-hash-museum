@@ -3,6 +3,7 @@
 #include <string>
 
 #include "hashes/selectHash.hpp"
+#include "strings/randomString.hpp"
 #include "strings/sequentialString.hpp"
 
 namespace {
@@ -17,26 +18,49 @@ namespace {
 }
 
 int main(int argc, char* argv[]) {
+  //Set up tool
+  seedRandom();
+  const unsigned int maxStringLength = 100;
+
+  //Check for a string input
   if (argc < 2) {
     std::cerr << "Expected a string to hash" << std::endl;
     return 1;
-  } else if (argc > 2) {
-    std::cerr << "Expected 1 argument, got " << argc - 1 << std::endl;
-    return 1;
   }
 
+  //Decide which string mode to use
+  bool randomMode = false;
+  if (argc >= 3) {
+    try {
+      randomMode = (std::string(argv[2]) == "true");
+    } catch (const std::exception&) {
+      std::cerr << "Failed to process random string toggle, expected 'true' or 'false'" << std::endl;
+      return 1;
+    }
+  }
+
+  //Take the input and calculate its hash
   std::string inputString(argv[1]);
   const std::string inputHash = hashStrings(&inputString, 1);
   std::cout << "'" << inputString << "' hashes to '" << inputHash \
-            << "', searching for collision...\n" << std::endl;
+            << "', searching for collisions..." << std::endl;
 
   //Data required for progress messages
   unsigned int attempts = 0;
   std::string lastRateMessage = "";
   std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 
+  //Initialise the string according to the mode
+  std::string searchString;
+  if (randomMode) {
+    std::cout << "Running in random mode, max length " << maxStringLength << "\n" << std::endl;
+    searchString = generateRandomString(getRandom(1, maxStringLength));
+  } else {
+    std::cout << "Running in sequential mode\n" << std::endl;
+    searchString = "a";
+  }
+
   //Search for hash collisions with the given string
-  std::string searchString = "a";
   while (true) {
     //Calculate the hash and check for a match
     const std::string searchStringHash = hashStrings(&searchString, 1);
@@ -77,7 +101,11 @@ int main(int argc, char* argv[]) {
     }
 
     //Generate the next string
-    searchString = nextString(searchString);
+    if (randomMode) {
+      searchString = generateRandomString(getRandom(1, maxStringLength));
+    } else {
+      searchString = nextString(searchString);
+    }
   }
 
   return 0;
