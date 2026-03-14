@@ -54,3 +54,15 @@
   - `VERBOSE`: Enable verbose build output, including algorithm selection
   - `HASH`: Configure the hash algorithm, as described [earlier](#hashes)
     - Defaults to `generic`
+
+## Performance
+  - Benchmarked on a Ryzen 7 7700X using `g++-15` and `clang++-22`
+
+    | Hash     | Hash rate (`g++`) | Hash rate (`clang++`) | Seq. diff (1) | Seq. diff (16) | Patterns found |
+    |:---------|:------------------|:----------------------|:--------------|:---------------|:---------------|
+    | Generic  | 1888 MB/s         | 2527 MB/s             | 28.767        | 51.0085        | 29             |
+    | Simple   | 2092 MB/s         | 2790 MB/s             | 10.918        | 17.2013        | 1              |
+    | Legacy   | 589 MB/s          | 1488 MB/s             | 4.93122       | 21.9216        | 1              |
+    | AVX-VAES | 13375 MB/s        | 41274 MB/s            | 64.2497       | 63.9986        | 0              |
+    | AVX2     | 4456 MB/s         | 5756 MB/s             | 35.0411       | 53.1389        | 0              |
+    | stdlib   | 4716 MB/s         | 7277 MB/s             | 63.9982       | 63.9998        | 0              |
