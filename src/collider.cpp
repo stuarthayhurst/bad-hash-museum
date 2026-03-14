@@ -81,13 +81,13 @@ int main(int argc, char* argv[]) {
     if (attempts >= 10000000) {
       //Calculate the time taken
       const auto deltaTime = std::chrono::system_clock::now() - start;
-      const unsigned int deltaTimeMilli =
-        std::chrono::duration_cast<std::chrono::milliseconds>(deltaTime).count();
+      const uintmax_t deltaTimeNano =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(deltaTime).count();
 
       //Calculate the hash rate and format
-      const double hashRate = ((double)attempts / (double)deltaTimeMilli) * 1000.0;
+      const double hashRate = (double)attempts / ((double)deltaTimeNano / 1000000000.0);
       const std::string message = "String length " + std::to_string(searchString.size()) \
-                                  + ", " + std::to_string((unsigned int)(hashRate)) \
+                                  + ", " + std::to_string((uintmax_t)(hashRate)) \
                                   + " hashes per second";
 
       //Clear the line and update it
