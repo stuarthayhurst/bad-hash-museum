@@ -14,11 +14,14 @@
   - Generic (simple) - `simple-generic`
     - An even more simple candidate for legacy-generic's replacement
   - AVX-512 + VAES - `avx-vaes`
-    - Push blocks of data each through a single round of AES by abusing VAES instructions
+    - Push blocks of data each through a two rounds of AES by abusing VAES instructions
   - AVX2 - `avx2`
     - An actual attempt at a hash using SIMD intrinsics
   - Standard library - `stdlib`
     - Use `std::hash`, as a reference point for the other hashes
+    - It's a little faster than it should be, since it has to share the integer to string conversion code to compare against the others
+      - This is instead of using `std::to_string`
+  - All hashes use the same custom integer to string conversion, producing a 16-character hash with values from `A` to `P`
 
 ## Tools
   - Benchmark
@@ -57,12 +60,15 @@
 
 ## Performance
   - Benchmarked on a Ryzen 7 7700X using `g++-15` and `clang++-22`
+  - Hashes marked with `*` are my own design
+    - `stdlib` uses `std::hash`, `AVX-VAES` abuses VAES instructions
+    - Both share the same conversion code as the others
 
     | Hash     | Hash rate (`g++`) | Hash rate (`clang++`) | Seq. diff (1) | Seq. diff (16) | Patterns found |
     |:---------|:------------------|:----------------------|:--------------|:---------------|:---------------|
-    | Legacy   | 586 MB/s          | 1321 MB/s             | 4.93122       | 21.9216        | 1              |
-    | Generic  | 1915 MB/s         | 2139 MB/s             | 28.767        | 51.0085        | 29             |
-    | Simple   | 2060 MB/s         | 2399 MB/s             | 10.918        | 17.2013        | 1              |
-    | AVX2     | 4516 MB/s         | 4491 MB/s             | 35.0411       | 53.1389        | 0              |
+    | Legacy*  | 586 MB/s          | 1321 MB/s             | 4.93122       | 21.9216        | 1              |
+    | Generic* | 1915 MB/s         | 2139 MB/s             | 28.767        | 51.0085        | 29             |
+    | Simple*  | 2060 MB/s         | 2399 MB/s             | 10.918        | 17.2013        | 1              |
+    | AVX2*    | 4516 MB/s         | 4491 MB/s             | 35.0411       | 53.1389        | 0              |
     | stdlib   | 4559 MB/s         | 5359 MB/s             | 63.9982       | 63.9998        | 0              |
     | AVX-VAES | 12560 MB/s        | 12959 MB/s            | 64.2497       | 63.9986        | 0              |
