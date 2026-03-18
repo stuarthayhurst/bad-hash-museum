@@ -65,7 +65,12 @@ static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsign
       input += 16;
     }
 
+    //Load the remainder, using AVX-512 if available
     if (inputSize > 0) {
+#if defined(__AVX512BW__) && defined(__AVX512VL__) && defined(__BMI2__)
+      const __mmask64 mask = _bzhi_u32(0xFFFFFFFF, inputSize);
+      __m128i data = _mm_maskz_loadu_epi8(mask, input);
+#else
       //Load the bulk of the remainder
       const __m128i inputMask = _mm_setr_epi32((inputSize >= 4) ? -1 : 0,
                                                (inputSize >= 8) ? -1 : 0,
@@ -112,6 +117,7 @@ static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsign
         data = _mm_insert_epi8(data, input[0], 0);
         break;
       }
+#endif
 
       //Spread input data out
       data = _mm_shuffle_epi8(data, shuffleVec);
