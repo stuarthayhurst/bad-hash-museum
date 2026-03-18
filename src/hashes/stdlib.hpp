@@ -6,6 +6,11 @@
 #include <functional>
 #include <string>
 
+#if defined(UINT64_MAX)
+#else
+  #error "Attempting to compile unsupported hash"
+#endif
+
 /*
  - Hash an array of string using std::hash
    - Use a faster integer to string conversion to match the format of the other hashes
