@@ -2,6 +2,8 @@
 #define STANDARDLIBRARYHASH
 
 #include <cstdint>
+#include <cstddef>
+#include <functional>
 #include <string>
 
 /*
