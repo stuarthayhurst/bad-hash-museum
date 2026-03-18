@@ -3,7 +3,7 @@
 
 #if defined(__AVX512F__) && defined(__AVX512BW__) && defined(__AVX512VL__) && \
     defined(__VAES__) && defined(__AVX2__) && defined(__SSE2__) && \
-    defined(__BMI2__) && defined(UINT64_MAX)
+    defined(__BMI2__)
 #else
   #error "Attempting to compile unsupported hash"
 #endif
