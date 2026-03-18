@@ -8,6 +8,9 @@
 
 /*
  - Hash an array of string using std::hash
+   - Use a faster integer to string conversion to match the format of the other hashes
+   - To be entirely fair (performance-wise), it should use std::to_string,
+     but that makes it harder to analyse
  - Written as performance reference for the other hashes
 */
 
