@@ -68,7 +68,9 @@ static std::string INLINEATTRIBUTE hashStrings(const std::string* inputs, unsign
     //Load the remainder, using AVX-512 if available
     if (inputSize > 0) {
 #if defined(__AVX512BW__) && defined(__AVX512VL__) && defined(__BMI2__)
-#pragma message("Using AVX-512 masking")
+  #ifdef VERBOSE
+    #pragma message("Using AVX-512 masking")
+  #endif
       const __mmask64 mask = _bzhi_u32(0xFFFFFFFF, inputSize);
       __m128i data = _mm_maskz_loadu_epi8(mask, input);
 #else
