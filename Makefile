@@ -19,8 +19,6 @@ else ifeq ($(HASH),avx2)
   HASHNUM := 4
 else ifeq ($(HASH),simple-generic)
   HASHNUM := 5
-else
-  HASHNUM := 0
 endif
 CXXFLAGS += -DSELECTHASH=$(HASHNUM)
 
