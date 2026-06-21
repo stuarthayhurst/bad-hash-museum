@@ -31,7 +31,7 @@ endif
 %: src/%.cpp src/hashes/*.hpp src/strings/*.hpp
 	$(CXX) "src/$@.cpp" -o "$@" $(CXXFLAGS)
 
-.PHONY: clean all bench hash analyse collide
+.PHONY: all bench hash analyse collide clean
 all: bench hash analyser collide
 bench: benchHash
 hash: hasher
